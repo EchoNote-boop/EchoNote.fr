@@ -1,0 +1,219 @@
+/* EchoNote — page WIP (DA sombre premium, accents vert/menthe) */
+:root{
+  --bg-1:#081019;
+  --bg-2:#0B1724;
+  --card:rgba(15,24,36,0.64);
+  --line:rgba(255,255,255,0.08);
+  --text:#E8F3FF;
+  --muted:#9DB3C8;
+  --accent-1:#12D9B2;
+  --accent-2:#45F5DA;
+  --ring:#86FFE0;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color:var(--text);
+  background:
+    radial-gradient(1200px 800px at 10% -10%, #0e1f31 0%, transparent 60%),
+    radial-gradient(900px 700px at 100% 0%, #10263a 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg-1), var(--bg-2));
+}
+
+.stage{
+  min-height:100%;
+  display:grid;
+  place-items:center;
+  padding: clamp(24px, 4vw, 48px);
+  position:relative;
+  overflow:hidden;
+}
+
+/* orbes décoratives */
+.orb{
+  position:absolute;
+  width:42vmax; height:42vmax;
+  filter: blur(48px);
+  opacity:.12;
+  border-radius:50%;
+  mix-blend-mode:screen;
+  animation: float 14s ease-in-out infinite;
+}
+.orb-a{ background: radial-gradient(circle at 30% 30%, var(--accent-1), transparent 60%); top:-10%; left:-10%;}
+.orb-b{ background: radial-gradient(circle at 70% 40%, var(--accent-2), transparent 60%); top:10%; right:-20%; animation-delay: -3s;}
+.orb-c{ background: radial-gradient(circle at 50% 60%, #28ffd2, transparent 60%); bottom:-20%; left:20%; animation-delay: -6s;}
+
+@keyframes float{
+  0%,100%{ transform: translateY(0) }
+  50%{ transform: translateY(-10px) }
+}
+
+/* carte centrale */
+.card{
+  width:min(720px, 94vw);
+  background: var(--card);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding: clamp(20px, 4vw, 36px);
+  backdrop-filter: saturate(120%) blur(8px);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+  position:relative;
+  overflow: visible; /* permet au logo de dépasser la carte */
+}
+.card::before{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(135deg, rgba(18,217,178,0.12), rgba(69,245,218,0.06), transparent 60%);
+  pointer-events:none;
+}
+
+/* ======= Slot logo : grand logo qui peut dépasser la carte ======= */
+.brand{
+  position:absolute;
+  top:-44px;           /* sort au-dessus de la carte */
+  left:24px;
+  z-index:2;
+  pointer-events:none; /* ne gêne pas les clics dans la carte */
+  margin:0;
+}
+.brand-logo{
+  height:125px;        /* taille demandée */
+  width:auto;
+  display:block;
+  filter: drop-shadow(0 8px 26px rgba(17,224,185,.30));
+  opacity:.98;
+  transform: translateZ(0); /* rendu net */
+}
+/* ================================================================= */
+
+/* textes */
+.title{
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+  line-height:1.15;
+  margin: 6px 0 6px;
+}
+.lead{
+  color:var(--text);
+  opacity:.92;
+  font-size: clamp(1rem, 1.6vw, 1.05rem);
+  line-height:1.6;
+  margin: 0 0 14px;
+}
+.muted{
+  color:var(--muted);
+  font-size:.92rem;
+  margin-top:14px;
+}
+
+/* actions */
+.actions{
+  display:flex; gap:.6rem; flex-wrap:wrap;
+  margin-top: 10px;
+}
+.btn{
+  --padY:.75rem; --padX:1.1rem;
+  appearance:none; border:0; cursor:pointer;
+  padding: var(--padY) var(--padX);
+  border-radius:999px;
+  font-weight:700;
+  letter-spacing:.01em;
+  transition: transform .15s ease, box-shadow .2s ease, background-position .35s ease;
+  outline: none;
+  text-decoration: none;       /* retire soulignement */
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.btn:link, .btn:visited, .btn:hover, .btn:active, .btn:focus{
+  text-decoration:none;        /* pas de souligné au hover */
+}
+.btn:focus-visible{
+  box-shadow:0 0 0 3px rgba(134,255,224,.3), 0 0 0 6px rgba(134,255,224,.2);
+}
+.btn:hover{ transform: translateY(-2px) }
+.btn:active{ transform: translateY(0) }
+
+/* primaire : gradient shift + glow */
+.btn-primary{
+  color:#05201a;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  box-shadow: 0 10px 28px rgba(17,224,185,.28);
+}
+.btn-primary:hover{
+  background-position: 100% 50%;
+  box-shadow: 0 16px 44px rgba(17,224,185,.36);
+  filter: saturate(110%);
+}
+
+/* ghost : voile doux + bord plus net */
+.btn-ghost{
+  color:var(--text);
+  background: transparent;
+  border:1px solid rgba(255,255,255,.16);
+  backdrop-filter: blur(2px);
+}
+.btn-ghost:hover{
+  background: rgba(255,255,255,.05);
+  border-color: rgba(255,255,255,.28);
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+
+/* outline : passe en plein discret au hover */
+.btn-outline{
+  color:#cfe5ff;
+  background: transparent;
+  border:1px dashed rgba(207,229,255,.5);
+}
+.btn-outline:hover{
+  border-style: solid;
+  border-color: var(--ring);
+  color:#ffffff;
+  background: rgba(134,255,224,.06);
+  box-shadow: 0 8px 26px rgba(134,255,224,.18);
+}
+
+/* utilitaires */
+.clamp{ text-wrap: balance }
+.clamp-3{ max-width: 60ch }
+
+/* Responsive : logo plus petit sur mobile */
+@media (max-width: 540px){
+  .brand{ top:-28px; left:16px; }
+  .brand-logo{ height:88px; }
+}
+
+/* accessibilité : réduire les animations si demandé */
+@media (prefers-reduced-motion: reduce){
+  .orb{ animation: none }
+  .btn{ transition:none }
+}
+
+/* === Centrer visuellement le contenu dans la carte (plus bas) === */
+.card{
+  /* plus d'air en haut, un peu plus en bas pour l’équilibre */
+  padding-top: clamp(56px, 8vw, 96px);
+  padding-bottom: clamp(32px, 6vw, 64px);
+}
+
+/* Ajuste sur mobile pour ne pas trop pousser le contenu */
+@media (max-width: 540px){
+  .card{
+    padding-top: clamp(40px, 9vw, 64px);
+    padding-bottom: clamp(24px, 7vw, 52px);
+  }
+}
+
+/* === Ajustement fin : logo un peu plus bas dans la carte === */
+.brand{
+  top: -24px;   /* était -44px ; valeur moins négative = plus bas */
+}
+
+/* Sur mobile, conserve une marge cohérente */
+@media (max-width: 540px){
+  .brand{ top: -18px; }  /* était -28px */
+}

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr" data-page="blog_index">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EchoNote – Le Lab</title>
+  <meta name="description" content="Analyses, conseils IA et cas concrets pour transformer vos avis en croissance.">
+  <link rel="stylesheet" href="../assets/EchoNote.css">
+  <link rel="stylesheet" href="../assets/motion.css">
+  <!-- metrics dans le head -->
+  <script src="../metrics.js" defer></script>
+</head>
+<body>
+  <!-- === CMP minimal (production) === -->
+  <div id="cmp" hidden style="position:fixed; inset:auto 16px 16px 16px; background:rgba(8,15,25,.96); color:#e8f3ff; border:1px solid rgba(255,255,255,.1); border-radius:12px; padding:14px 16px; z-index:99999; box-shadow:0 12px 32px rgba(0,0,0,.35); max-width:860px; margin-inline:auto; backdrop-filter:saturate(120%) blur(6px); display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+    <p style="margin:0; line-height:1.5">Nous utilisons des cookies de <strong>mesure d’audience</strong> (GA4) pour améliorer EchoNote.</p>
+    <div style="margin-left:auto; display:flex; gap:10px;">
+      <button id="cmp-decline" type="button" style="background:transparent; color:#cfe5ff; border:1px solid rgba(255,255,255,.25); padding:.5rem .9rem; border-radius:999px; cursor:pointer;">Refuser</button>
+      <button id="cmp-accept" type="button" style="background:linear-gradient(135deg,#12D9B2,#45F5DA); color:#05201a; font-weight:700; padding:.5rem 1rem; border:0; border-radius:999px; cursor:pointer; box-shadow:0 6px 18px rgba(17,224,185,.28);">Accepter</button>
+    </div>
+  </div>
+  <script>
+    window.consent = window.consent || { analytics: false };
+    document.addEventListener('DOMContentLoaded', function () {
+      const isLocal=['localhost','127.0.0.1'].includes(location.hostname);
+      const box=document.getElementById('cmp');
+      const ok=document.getElementById('cmp-accept');
+      const ko=document.getElementById('cmp-decline');
+      const saved=localStorage.getItem('consent_analytics');
+      const hide=()=>{if(box){box.hidden=true; box.style.display='none'; box.setAttribute('aria-hidden','true');}};
+      const show=()=>{if(box){box.hidden=false; box.style.display=''; box.removeAttribute('aria-hidden');}};
+
+      if(saved==='granted'||isLocal){window.consent.analytics=true;hide();document.dispatchEvent(new Event('consent:analytics'));}
+      else if(saved==='denied'){window.consent.analytics=false;hide();}
+      else{show();}
+
+      ok?.addEventListener('click',()=>{window.consent.analytics=true;localStorage.setItem('consent_analytics','granted');hide();document.dispatchEvent(new Event('consent:analytics'));});
+      ko?.addEventListener('click',()=>{window.consent.analytics=false;localStorage.setItem('consent_analytics','denied');hide();});
+    });
+  </script>
+  <!-- === /CMP minimal === -->
+
+<header class="en-header" role="banner" aria-label="Navigation principale">
+  <div class="en-header-inner">
+    <a class="en-logo-link" href="/Index.html" aria-label="EchoNote"
+       data-event="nav_click" data-to="home" data-pos="header">
+      <img class="en-logo" src="Logo EchoNote.png" alt="EchoNote" loading="eager" decoding="async" />
+    </a>
+
+    <nav class="en-nav" role="navigation" aria-label="Menu principal">
+      <ul class="en-nav-list">
+        <li><a href="/index.html" data-event="nav_click" data-to="home" data-pos="header">Accueil</a></li>
+        <li><a href="/index.html#features" data-event="nav_click" data-to="features" data-pos="header">Fonctionnalités</a></li>
+        <li><a href="/index.html#pricing" data-event="nav_click" data-to="pricing" data-pos="header">Tarifs</a></li>
+        <li class="is-active"><a href="/blog/Index.html" aria-current="page" data-event="nav_click" data-to="blog" data-pos="header">Blog</a></li>
+        <li><a href="/index.html#contact" data-event="nav_click" data-to="contact" data-pos="header">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="en-ctas">
+      <a class="en-btn en-btn-ghost" href="/login" data-event="nav_click" data-to="login" data-pos="header">Connexion</a>
+      <a class="en-btn en-btn-accent" href="/signup" data-event="signup_click" data-location="header" data-cta="nav:subscribe">S’abonner</a>
+    </div>
+  </div>
+</header>
+
+<section class="en-hero" aria-label="En-tête blog" data-section="blog_hero">
+  <div class="en-hero-gradient"></div>
+  <div class="en-hero-inner">
+    <span class="en-badge">Le Lab EchoNote</span>
+
+    <h1 class="en-hero-title">
+      Insights d’e-réputation pour<br/>
+      <span class="en-hero-accent">PME</span>
+    </h1>
+
+    <p class="en-hero-sub">
+      Articles concis, études et conseils concrets pour transformer vos avis en croissance.
+    </p>
+
+    <div class="en-pills">
+      <a class="en-pill" href="#analyses" data-event="nav_click" data-to="analyses" data-pos="hero">
+        <img class="en-pill-icon" src="Analyses actionnables bueno.png" alt="" aria-hidden="true"/>
+        <span>Analyses actionnables</span>
+      </a>
+      <a class="en-pill" href="#conseils" data-event="nav_click" data-to="conseils" data-pos="hero">
+        <img class="en-pill-icon" src="Conseils IA (2).png" alt="" aria-hidden="true"/>
+        <span>Conseils IA &amp; Reviews</span>
+      </a>
+      <a class="en-pill" href="#cas-pme" data-event="nav_click" data-to="cas-pme" data-pos="hero">
+        <img class="en-pill-icon" src="cas Concrets pme bueno.png" alt="" aria-hidden="true"/>
+        <span>Cas concrets PME</span>
+      </a>
+    </div>
+
+    <form class="en-search" role="search" aria-label="Rechercher un article" id="blog-search" data-event="search_blog">
+      <input class="en-search-input" type="search" placeholder="Rechercher un article…" aria-label="Rechercher un article" name="q"/>
+      <button class="en-search-clear" type="button" aria-label="Effacer la recherche">×</button>
+    </form>
+  </div>
+</section>
+
+<section class="container section" data-section="featured">
+  <article class="card card--hover featured" data-slug="pme-44-en-60j" data-trend="true" data-date="2023-08-01" data-views="2800">
+    <div class="media-cover"><img src="ArticleUn.png" alt="Cas PME méthode 60 jours"></div>
+    <div>
+      <div class="badge-wrap"><span class="badge">Stratégie</span><span class="badge">Tendance</span></div>
+      <h2 class="clamp-2">De 3,6★ à 4,4★ en 60 jours : méthode PME</h2>
+      <p class="clamp-3">Les leviers concrets qui transforment la réputation d’une PME.</p>
+      <div class="meta"><span>6 min</span><span>01/08/2025</span></div>
+      <a href="article-un/ArticleUn.html" class="btn btn-primary focus-ring shine-wrap"
+         data-event="article_open" data-slug="pme-44-en-60j" data-location="featured">Lire</a>
+    </div>
+  </article>
+</section>
+
+<section class="container section" data-section="grid">
+  <p id="resultCount" class="muted">4 articles trouvés</p>
+  <div class="grid-editorial">
+    <article class="card card--hover editorial-card" data-category="ia" data-date="2023-10-10" data-views="2450" data-slug="filtrage-ia">
+      <div class="media-cover"><img src="ArticleDeux.png" alt="Filtrage des avis IA"></div>
+      <div class="content">
+        <span class="badge">IA</span>
+        <h3 class="title clamp-2">Filtrer les avis comme un pro (IA + règles)</h3>
+        <p class="clamp-3">Automatisez le tri de vos retours pour ne garder que l’essentiel.</p>
+        <div class="meta"><span>5 min</span><span>10/10/2023</span></div>
+        <a href="article-deux/ArticleDeux.html" class="btn btn-primary focus-ring shine-wrap"
+           data-event="article_open" data-slug="filtrage-ia" data-location="list">Lire</a>
+      </div>
+    </article>
+
+    <article class="card card--hover editorial-card" data-category="google" data-date="2023-09-08" data-views="1320" data-slug="google-quick-wins">
+      <div class="media-cover"><img src="ArticleTrois.png" alt="Google Reviews"></div>
+      <div class="content">
+        <span class="badge">Google</span>
+        <h3 class="title clamp-2">Google Reviews : 7 quick wins pour +1★</h3>
+        <p class="clamp-3">Des actions simples pour booster votre note moyenne en quelques jours.</p>
+        <div class="meta"><span>4 min</span><span>08/09/2023</span></div>
+        <a href="article-trois/ArticleTrois.html" class="btn btn-primary focus-ring shine-wrap"
+           data-event="article_open" data-slug="google-quick-wins" data-location="list">Lire</a>
+      </div>
+    </article>
+
+    <article class="card card--hover editorial-card" data-category="pme" data-date="2023-07-12" data-views="980" data-slug="playbook-pme">
+      <div class="media-cover"><img src="ArticleQuatre.png" alt="Playbook PME"></div>
+      <div class="content">
+        <span class="badge">PME</span>
+        <h3 class="title clamp-2">Playbook PME : répondre aux avis à grande échelle</h3>
+        <p class="clamp-3">Structurez vos réponses et gagnez du temps.</p>
+        <div class="meta"><span>5 min</span><span>12/07/2023</span></div>
+        <a href="article-quatre/ArticleQuatre.html" class="btn btn-primary focus-ring shine-wrap"
+           data-event="article_open" data-slug="playbook-pme" data-location="list">Lire</a>
+      </div>
+    </article>
+
+    <article class="card card--hover editorial-card" data-category="case" data-date="2023-06-15" data-views="1650" data-slug="cas-conversion">
+      <div class="media-cover"><img src="ArticleCinq.png" alt="Cas client conversions"></div>
+      <div class="content">
+        <span class="badge">Cas Client</span>
+        <h3 class="title clamp-2">Cas client : +18% de conversions en 45 jours</h3>
+        <p class="clamp-3">Retour d’expérience d’un réseau d’artisans.</p>
+        <div class="meta"><span>6 min</span><span>15/06/2023</span></div>
+        <a href="article-cinq/ArticleCinq.html" class="btn btn-primary focus-ring shine-wrap"
+           data-event="article_open" data-slug="cas-conversion" data-location="list">Lire</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="container section" data-section="blog_newsletter">
+  <div class="newsletter card">
+    <h3 class="clamp-1">Recevez les nouveaux articles</h3>
+    <form data-event="newsletter_submit" data-location="blog_newsletter">
+      <input type="email" placeholder="Votre email" aria-label="Votre email">
+      <button class="btn btn-primary focus-ring shine-wrap" type="submit">S’abonner</button>
+    </form>
+    <p class="muted" style="margin-top:.6rem">Désinscription en un clic.</p>
+  </div>
+</section>
+
+<script src="../assets/EchoNote.js" defer></script>
+<script src="Blog.js" defer></script>
+
+<!-- (SUPPRIMÉ) GA4 hooks inline : metrics.js assure le tracking -->
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr" data-page="wip">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EchoNote — Fonctionnalité en cours de développement</title>
+  <meta name="color-scheme" content="dark light" />
+  <link rel="stylesheet" href="pecdd.css" />
+  <!-- (Optionnel) branche GA4 comme le reste du site -->
+  <!-- <script src="metrics.js" defer></script> -->
+</head>
+<body>
+  <main class="stage">
+    <!-- orbes décoratives -->
+    <div class="orb orb-a" aria-hidden="true"></div>
+    <div class="orb orb-b" aria-hidden="true"></div>
+    <div class="orb orb-c" aria-hidden="true"></div>
+
+    <section class="card" role="status" aria-live="polite">
+      <!-- ========= Slot logo (remplace src par ton fichier) ========= -->
+      <header class="brand">
+        <!-- Mets ici ton logo EchoNote (PNG/SVG). Laisse l’img si tu n’en as pas encore -->
+        <img class="brand-logo" src="../Logo EchoNote.png" alt="EchoNote" />
+      </header>
+      <!-- ============================================================= -->
+
+      <h1 class="title clamp">Bientôt disponible</h1>
+      <p class="lead clamp-3">
+        La fonctionnalité est actuellement en cours de developpement. Veuillez réessayer ultérieurement.
+      </p>
+
+      <div class="actions">
+        <a class="btn btn-primary"
+           href="/index.html"
+           data-event="nav_click" data-to="home" data-pos="wip">Retour à l’accueil</a>
+
+        <a class="btn btn-ghost"
+           href="/blog/index.html"
+           data-event="nav_click" data-to="blog" data-pos="wip">Voir le blog</a>
+
+        <button class="btn btn-outline"
+                type="button"
+                data-event="wip_retry" data-location="wip"
+                onclick="location.reload()">Réessayer</button>
+      </div>
+
+      <p class="muted">Merci pour votre patience — l’équipe EchoNote améliore le produit en continu.</p>
+    </section>
+  </main>
+</body>
+</html>
