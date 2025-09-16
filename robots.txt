@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://echonote.fr/sitemap.xml
+Sitemap: https://echonote.eu/sitemap.xml
