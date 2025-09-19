@@ -7,6 +7,80 @@
   <link rel="stylesheet" href="Style.css">
   <!-- metrics doit être dans le head (defer) -->
   <script src="metrics.js" defer></script>
+
+  <!-- ===== Premium Waitlist: safe viewport + glass + scroll interne ===== -->
+  <style>
+    /* Empêche tout dépassement + scroll interne si contenu long */
+    #wl-modal{
+      padding: clamp(12px, 4vh, 40px);                 /* marge autour du dialog */
+      place-items: start center;                        /* aligne en haut si grand */
+      overflow: auto;                                   /* overlay scrollable */
+    }
+    .wl-dialog{
+      width: clamp(320px, 92vw, 640px);                 /* un poil plus large mais fluide */
+      max-height: min(86dvh, 760px);                    /* ne dépasse jamais l’écran */
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;                                 /* on délègue le scroll à l’étape */
+      border-radius: 20px;
+      background: radial-gradient(120% 120% at 85% -10%, rgba(100,255,218,.10), transparent 60%),
+                  linear-gradient(180deg, rgba(9,21,38,.96), rgba(9,21,38,.92));
+      box-shadow: 0 24px 80px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: saturate(120%) blur(10px);
+      -webkit-backdrop-filter: saturate(120%) blur(10px);
+    }
+
+    /* Le contenu des étapes scrolle à l’intérieur si nécessaire */
+    #wl-step1, #wl-step2, #wl-success{
+      overflow: auto;
+      overscroll-behavior: contain;
+      max-height: 100%;
+      padding-right: 4px;                               /* place pour la scrollbar */
+      scrollbar-width: thin;                            /* Firefox */
+    }
+    /* WebKit scrollbar minimaliste */
+    #wl-step1::-webkit-scrollbar, #wl-step2::-webkit-scrollbar, #wl-success::-webkit-scrollbar{ width: 8px; }
+    #wl-step1::-webkit-scrollbar-thumb, #wl-step2::-webkit-scrollbar-thumb, #wl-success::-webkit-scrollbar-thumb{
+      background: linear-gradient(180deg, rgba(100,255,218,.45), rgba(17,224,185,.25));
+      border-radius: 999px;
+    }
+    #wl-step1::-webkit-scrollbar-track, #wl-step2::-webkit-scrollbar-track, #wl-success::-webkit-scrollbar-track{
+      background: rgba(255,255,255,.06);
+      border-radius: 999px;
+    }
+
+    /* CTA toujours accessible : colle le bouton au bas de l’étape quand ça scrolle */
+    #wl-form-email .wl-btn-primary,
+    #wl-form-quiz  #wl-submit,
+    #wl-success    .wl-btn-primary{
+      position: sticky;
+      bottom: 0;
+      margin-top: 12px;
+      box-shadow: 0 10px 28px rgba(17,224,185,.32);
+    }
+
+    /* Micro-polish visuel des champs pour renforcer le côté premium */
+    .wl-input, .wl-select{
+      background: linear-gradient(180deg, #0F1E30, #0B1928);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    .wl-input:focus, .wl-select:focus{
+      border-color: rgba(100,255,218,.55);
+      box-shadow: 0 0 0 4px rgba(100,255,218,.12), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .wl-radio-grid label, .wl-check-grid label{
+      background: linear-gradient(180deg, #10243a, #0e1f31);
+    }
+
+    /* Empêche le scroll de fond quand le modal est ouvert */
+    body.wl-open{ overflow: hidden; }
+
+    /* Petites tailles : resserrer la grille des choix pour que rien ne déborde */
+    @media (max-width: 520px){
+      .wl-radio-grid, .wl-check-grid{ grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
@@ -76,6 +150,12 @@
         <div class="cta-container">
           <span class="badge badge--tag">Sans CB</span>
           <a class="cta-button" href="PageEnCoursDeDev/pecdd.html" data-event="signup_click" data-location="hero" data-cta="hero:try-free">Essayer gratuitement</a>
+          <a class="cta-button cta-secondary"
+             href="#"
+             data-event="waitlist_open"
+             data-location="hero"
+             data-cta="hero:join-waitlist"
+             id="open-waitlist-hero">Rejoindre la bêta</a>
         </div>
       </div>
       <div class="hero-media">
@@ -150,6 +230,29 @@
           <p class="status">Fondateur</p>
           <div class="rating">★★★★★ 4.8/5</div>
           <p class="review">Nous avons doublé nos avis positifs en quelques mois.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bloc pré-pricing -->
+    <section id="pre-pricing-waitlist" class="section container reveal" data-section="pre_pricing" style="margin-top:48px">
+      <div class="card hover-rise" style="background:linear-gradient(135deg, rgba(10,25,47,.85), rgba(16,55,72,.85));
+                                      border:1px solid rgba(100,255,218,.18);
+                                      border-radius:18px; padding:28px; box-shadow:0 18px 50px rgba(0,0,0,.35);
+                                      backdrop-filter:saturate(120%) blur(6px);">
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:16px;">
+          <div style="flex:1 1 320px">
+            <h3 class="clamp-2" style="margin:0 0 8px; color:#e6f1ff">Accès bêta — sans CB</h3>
+            <p class="wl-muted" style="margin:0;">30 secondes, 4 questions. Aidez-nous à prioriser votre accès et à adapter EchoNote à votre activité.</p>
+          </div>
+          <div>
+            <a class="btn btn-primary"
+               href="#"
+               data-event="waitlist_open"
+               data-location="pre_pricing"
+               data-cta="pre_pricing:join-waitlist"
+               id="open-waitlist-prepricing">Accéder à la bêta</a>
+          </div>
         </div>
       </div>
     </section>
@@ -382,6 +485,314 @@
       heroImg.style.transform = `translate(${x}px, ${y}px)`;
     });
     hero.addEventListener('mouseleave', () => { heroImg.style.transform = 'translate(0,0)'; });
+  </script>
+
+  <!-- === Waitlist Modal (Email -> Questionnaire -> Succès) === -->
+  <div id="wl-modal" hidden>
+    <div class="wl-dialog" role="dialog" aria-modal="true" aria-labelledby="wl-title">
+      <button type="button" aria-label="Fermer" class="wl-close" id="wl-close">×</button>
+
+      <!-- Step indicator -->
+      <div class="wl-steps">
+        <span id="wl-step1-dot" class="wl-dot active"></span>
+        <span id="wl-step2-dot" class="wl-dot"></span>
+        <span class="wl-progress" id="wl-progress">Étape 1/2 — 10 s</span>
+      </div>
+
+      <!-- Step 1: Email -->
+      <div id="wl-step1">
+        <h3 id="wl-title" class="wl-title">Rejoindre la liste d’attente</h3>
+        <p class="wl-muted">Sans CB — accès prioritaire à la bêta.</p>
+        <form id="wl-form-email" action="https://formspree.io/f/xandrbwa" method="POST" data-event="waitlist_email_submit" data-location="waitlist_modal">
+          <label for="wl-email" style="display:block; margin:0 0 6px; color:#cfe5ff;">Votre email professionnel</label>
+          <input id="wl-email" name="email" type="email" required autocomplete="email"
+                 placeholder="ex. contact@votre-entreprise.fr" class="wl-input">
+          <button type="submit" class="wl-btn wl-btn-primary">Continuer</button>
+          <button type="button" class="wl-btn wl-btn-ghost" id="wl-later">Plus tard</button>
+        </form>
+      </div>
+
+      <!-- Step 2: Questionnaire -->
+      <div id="wl-step2" hidden>
+        <h3 class="wl-title">Votre activité en 30 secondes</h3>
+        <p class="wl-muted">4 questions pour adapter EchoNote à vos besoins.</p>
+
+        <!-- Barre de progression -->
+        <div class="wl-pbar" aria-hidden="true"><div class="wl-pbar-fill" id="wl-pbar-fill"></div></div>
+
+        <form id="wl-form-quiz" action="https://formspree.io/f/xandrbwa" method="POST"
+              data-event="waitlist_questionnaire_submit" data-location="waitlist_modal">
+          <label style="display:block; margin:10px 0 6px; color:#cfe5ff;">Votre entreprise est plutôt…</label>
+          <select name="sector" id="wl-sector" class="wl-select" required>
+            <option value="" disabled selected>Choisir</option>
+            <option>Bar / Restaurant / Café</option>
+            <option>Commerce de proximité</option>
+            <option>Santé / Bien-être</option>
+            <option>Services (immobilier, auto, artisan…)</option>
+            <option>Autre</option>
+          </select>
+
+          <label style="display:block; margin:10px 0 6px; color:#cfe5ff;">Combien d’avis Google environ ?</label>
+          <div class="wl-radio-grid" id="wl-reviews">
+            <label><input type="radio" name="reviews_band" value="<20" required> Moins de 20</label>
+            <label><input type="radio" name="reviews_band" value="20-50"> 20 à 50</label>
+            <label><input type="radio" name="reviews_band" value="50-200"> 50 à 200</label>
+            <label><input type="radio" name="reviews_band" value="200+"> Plus de 200</label>
+          </div>
+
+          <label style="display:block; margin:10px 0 6px; color:#cfe5ff;">Votre principale difficulté actuelle ?</label>
+          <select name="pain_point" id="wl-pain" class="wl-select" required>
+            <option value="" disabled selected>Choisir</option>
+            <option>Manque de temps pour répondre</option>
+            <option>Avis négatifs qui font fuir</option>
+            <option>Obtenir plus d’avis</option>
+            <option>Répondre efficacement / ton approprié</option>
+            <option>Suivi / reporting inexistant</option>
+          </select>
+
+          <label style="display:block; margin:10px 0 6px; color:#cfe5ff;">Vous seriez intéressé par… (1+)</label>
+          <div class="wl-check-grid" id="wl-interests" style="margin-bottom:6px;">
+            <label><input type="checkbox" name="interest_ai_reply" value="true"> Réponses auto intelligentes</label>
+            <label><input type="checkbox" name="interest_reports" value="true"> Rapports mensuels clairs</label>
+            <label><input type="checkbox" name="interest_alerts" value="true"> Alertes en temps réel</label>
+            <label><input type="checkbox" name="interest_competitive" value="true"> Analyse concurrentielle</label>
+          </div>
+
+          <input type="hidden" name="email" id="wl-email-hidden">
+          <button type="submit" class="wl-btn wl-btn-primary" id="wl-submit" disabled>Valider et rejoindre</button>
+        </form>
+        <p id="wl-small-note" class="wl-small" hidden>Envoi…</p>
+      </div>
+
+      <!-- Step 3: Succès -->
+      <div id="wl-success" hidden>
+        <div class="wl-check">✓</div>
+        <h3 class="wl-title">Merci, votre demande est enregistrée ✅</h3>
+        <p class="wl-muted">Nous vous recontactons très vite pour l’accès à la bêta.</p>
+        <button type="button" class="wl-btn wl-btn-primary" id="wl-close-success">Retour au site</button>
+      </div>
+    </div>
+  </div>
+  <!-- === /Waitlist Modal === -->
+
+  <script>
+  /* -------------------------------------------
+     Waitlist modal logic + GA4 hooks + slide-in + AJAX submit + close handling + progression
+  -------------------------------------------- */
+  (function(){
+    const modal = document.getElementById('wl-modal');
+    const step1 = document.getElementById('wl-step1');
+    const step2 = document.getElementById('wl-step2');
+    const step3 = document.getElementById('wl-success');
+    const emailInput = document.getElementById('wl-email');
+    const emailHidden = document.getElementById('wl-email-hidden');
+    const formEmail = document.getElementById('wl-form-email');
+    const formQuiz  = document.getElementById('wl-form-quiz');
+    /* === Ouverture/fermeture "intelligente" du <select> pour ne pas
+       qu'il se fasse recouvrir par le bouton sticky =================== */
+const step2El = document.getElementById('wl-step2');
+function setSelectOpen(on){ document.body.classList.toggle('select-open', !!on); }
+
+step2El?.addEventListener('mousedown', e=>{
+  if (e.target.closest('.wl-select')) setSelectOpen(true);
+});
+step2El?.addEventListener('focusin', e=>{
+  if (e.target.matches('.wl-select')) setSelectOpen(true);
+});
+step2El?.addEventListener('change', e=>{
+  if (e.target.matches('.wl-select')) setTimeout(()=>setSelectOpen(false),0);
+});
+/* on capture le blur pour être sûr de récupérer le focus qui part */
+step2El?.addEventListener('blur', e=>{
+  if (e.target.matches('.wl-select')) setTimeout(()=>setSelectOpen(false),120);
+}, true);
+/* clic n'importe où hors select => on referme le mode "select ouvert" */
+document.addEventListener('click', e=>{
+  if (!e.target.closest('.wl-select')) setSelectOpen(false);
+});
+
+    const laterBtn  = document.getElementById('wl-later');
+    const closeBtn  = document.getElementById('wl-close');
+    const closeSuccessBtn = document.getElementById('wl-close-success');
+    const dot1 = document.getElementById('wl-step1-dot');
+    const dot2 = document.getElementById('wl-step2-dot');
+    const progress = document.getElementById('wl-progress');
+    const smallNote = document.getElementById('wl-small-note');
+
+    // tracking helper (compatible metrics.js + consent)
+    const ok = () => window.consent?.analytics !== false;
+    const track = (name, params={})=>{
+      params.page = location.pathname;
+      if (!ok()) { (window.__mtq = window.__mtq || []).push({name, params}); return; }
+      if (window.gtag) gtag('event', name, params);
+      else (window.__mtq = window.__mtq || []).push({name, params});
+    };
+
+    let slideInShown = false;
+    let exited = false;
+
+    function closeModal(reason){
+      modal.hidden = true;
+      document.body.classList.remove('wl-open');  // <- déverrouille le scroll de fond
+      sessionStorage.setItem('wl_closed','true');
+      slideInShown = true; exited = true;
+      track('waitlist_close', { reason: reason || 'manual' });
+    }
+
+    function openModal(source){
+      if (sessionStorage.getItem('wl_closed') === 'true') return;
+      modal.hidden = false;
+      document.body.classList.add('wl-open');     // <- verrouille le scroll de fond
+      step1.hidden = false; step2.hidden = true; step3.hidden = true;
+      dot1.classList.add('active'); dot2.classList.remove('active');
+      progress.textContent = 'Étape 1/2 — 10 s';
+      emailInput.focus();
+      track('waitlist_open', { location: source });
+    }
+
+    function goStep2(){
+      step1.hidden = true; step2.hidden = false; step3.hidden = true;
+      dot1.classList.remove('active'); dot2.classList.add('active');
+      progress.textContent = 'Étape 2/2 — 30 s';
+      track('waitlist_questionnaire_start', { location: 'waitlist_modal' });
+      if (typeof updateProgress === 'function') updateProgress();
+    }
+
+    function goSuccess(){
+      step1.hidden = true; step2.hidden = true; step3.hidden = false;
+      dot1.classList.remove('active'); dot2.classList.remove('active');
+      progress.textContent = 'Merci !';
+      setTimeout(()=> closeModal('auto_success'), 1800);
+    }
+
+    // Openers
+    document.getElementById('open-waitlist-hero')?.addEventListener('click', (e)=>{ e.preventDefault(); openModal('hero'); });
+    document.getElementById('open-waitlist-prepricing')?.addEventListener('click', (e)=>{ e.preventDefault(); openModal('pre_pricing'); });
+
+    // Header buttons -> même questionnaire
+    document.querySelector('.actions .btn.btn-outline')?.addEventListener('click', (e)=>{ e.preventDefault(); openModal('header_login'); });
+    document.querySelector('.actions .btn.btn-primary')?.addEventListener('click', (e)=>{ e.preventDefault(); openModal('header_subscribe'); });
+    document.querySelector('.cta-button[href*="pecdd.html"]')?.addEventListener('click', (e)=>{ e.preventDefault(); openModal('hero_try'); });
+
+    // Close handlers
+    closeBtn?.addEventListener('click', ()=> closeModal('close_button'));
+    closeSuccessBtn?.addEventListener('click', ()=> closeModal('success_button'));
+    modal?.addEventListener('click', (e)=>{ if (e.target === modal) closeModal('overlay'); });
+    document.addEventListener('keydown', (e)=>{ if (!modal.hidden && e.key === 'Escape') closeModal('escape'); });
+
+    // Step1 submit
+    formEmail?.addEventListener('submit', function(e){
+      e.preventDefault();
+      if (!emailInput.value) return;
+      localStorage.setItem('wl_email', emailInput.value);
+      emailHidden.value = emailInput.value;
+      track('waitlist_email_submit', { location: 'waitlist_modal' });
+      goStep2();
+    });
+
+    // "Plus tard"
+    laterBtn?.addEventListener('click', ()=>{
+      if (emailInput.value) {
+        localStorage.setItem('wl_email', emailInput.value);
+        emailHidden.value = emailInput.value;
+        track('waitlist_email_submit', { location: 'waitlist_modal', later: 'true' });
+      }
+      closeModal('later');
+    });
+
+    // Step2 submit (AJAX)
+    formQuiz?.addEventListener('submit', async function(e){
+      e.preventDefault();
+      smallNote.hidden = false; smallNote.textContent = 'Envoi…';
+      const fd = new FormData(formQuiz);
+      if (!fd.get('email')) fd.set('email', emailHidden.value || localStorage.getItem('wl_email') || '');
+      try{
+        const resp = await fetch(formQuiz.action, {
+          method:'POST',
+          body: fd,
+          headers: { 'Accept':'application/json' }
+        });
+        if (resp.ok){
+          localStorage.setItem('wl_done', 'true');
+          track('waitlist_questionnaire_submit', { location: 'waitlist_modal' });
+          goSuccess();
+        }else{
+          smallNote.textContent = 'Envoi via page externe…';
+          const w = window.open(formQuiz.action, '_blank', 'noopener');
+          if (w) { formQuiz.target = w.name; formQuiz.submit(); }
+          closeModal('fallback_formspree');
+        }
+      }catch(err){
+        smallNote.textContent = 'Envoi indisponible pour le moment. Réessayez plus tard.';
+        setTimeout(()=> closeModal('error'), 1200);
+      }
+    });
+
+    // Prefill email
+    const savedEmail = localStorage.getItem('wl_email');
+    if (savedEmail) { emailInput.value = savedEmail; emailHidden.value = savedEmail; }
+
+    // Slide-in (55%)
+    function trySlideIn(){
+      if (slideInShown) return;
+      if (sessionStorage.getItem('wl_closed') === 'true') return;
+      if (localStorage.getItem('wl_done') === 'true') return;
+      const h = document.documentElement;
+      const pct = Math.round((h.scrollTop / ((h.scrollHeight - h.clientHeight)||1)) * 100);
+      if (pct >= 55) {
+        slideInShown = true;
+        openModal('slidein');
+      }
+    }
+    window.addEventListener('scroll', trySlideIn, { passive:true });
+
+    // Exit intent
+    document.addEventListener('mouseleave', (e)=>{
+      if (exited || window.innerWidth < 900) return;
+      if (!e.clientY || e.clientY > 0) return;
+      if (sessionStorage.getItem('wl_closed') === 'true') return;
+      if (localStorage.getItem('wl_done') === 'true') return;
+      if (localStorage.getItem('wl_email')) {
+        modal.hidden = false; document.body.classList.add('wl-open');
+        step1.hidden = true; step2.hidden = false; step3.hidden = true;
+        dot1.classList.remove('active'); dot2.classList.add('active');
+        progress.textContent = 'Étape 2/2 — 30 s';
+        track('waitlist_open', { location: 'exit_intent' });
+        track('waitlist_questionnaire_start', { location: 'waitlist_modal' });
+        exited = true;
+        if (typeof updateProgress === 'function') updateProgress();
+      }
+    });
+
+    /* === Progression + activation bouton === */
+    const pbar = document.getElementById('wl-pbar-fill');
+    const btnSubmit = document.getElementById('wl-submit');
+    const sector = document.getElementById('wl-sector');
+    const pain   = document.getElementById('wl-pain');
+    const reviews= formQuiz?.querySelectorAll('input[name="reviews_band"]');
+    const interests = formQuiz?.querySelectorAll('#wl-interests input[type="checkbox"]');
+
+    function answeredRequired(){
+      const sectorOK = sector && sector.value;
+      const painOK   = pain && pain.value;
+      let reviewsOK  = false;
+      reviews && reviews.forEach(r=>{ if(r.checked) reviewsOK = true; });
+      return (sectorOK ? 1:0) + (reviewsOK ? 1:0) + (painOK ? 1:0);
+    }
+    function anyInterest(){
+      let ok=false; interests && interests.forEach(c=>{ if(c.checked) ok=true; }); return ok;
+    }
+    window.updateProgress = function(){
+      const base = answeredRequired();          // requis: 3
+      const extra = anyInterest() ? 1 : 0;      // bonus 0/1
+      const pct = Math.min(100, Math.round(((base + (extra? .5:0)) / 3.5) * 100));
+      if (pbar) pbar.style.width = pct + '%';
+      if (btnSubmit) btnSubmit.disabled = base < 3;
+    }
+    ;['change','input'].forEach(evt=>{
+      formQuiz?.addEventListener(evt, updateProgress, { passive:true });
+    });
+  })();
   </script>
 
   <!-- (SUPPRIMÉ) GA4 hooks inline : on s'appuie sur metrics.js pour éviter les doublons -->

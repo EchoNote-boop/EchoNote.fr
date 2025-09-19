@@ -209,7 +209,6 @@ main {
     color: white;
 }
 
-
 .hero-content {
     max-width: 48%;
 }
@@ -293,8 +292,6 @@ main {
     opacity: 0.1;
 }
 
-
-
 .cta-container {
     display: flex;
     align-items: center;
@@ -356,8 +353,6 @@ main {
     border-bottom-right-radius: 100% 100%;
 }
 
-
-
 /* Section fonctionnement en 6 étapes */
 .features-section {
     background: #0a2540;
@@ -367,7 +362,6 @@ main {
 .features-section .section-title-wrapper {
     padding-bottom: 1rem;
 }
-
 
 .features-grid {
     display: grid;
@@ -414,7 +408,6 @@ main {
     height: 48px;
     margin: 0 auto 1rem;
     display: block;
-
     transition: filter 0.3s ease;
 }
 
@@ -441,7 +434,6 @@ main {
         grid-template-columns: 1fr;
     }
 }
-
 
 .avis-clients-section {
     margin-top: 0;
@@ -832,7 +824,6 @@ main {
 }
 
 .footer-logo {
-    /* Ensure footer logo matches header scale without affecting footer height */
     max-height: 125px;
     height: auto;
     width: auto;
@@ -893,7 +884,7 @@ main {
 }
 
 .copyright {
-    margin-top: 0.5rem; /* tighter spacing above copyright line */
+    margin-top: 0.5rem;
     margin-bottom: 0;
     font-size: 0.875rem;
 }
@@ -1031,8 +1022,7 @@ main {
 /* override pour retirer la bande noire derrière "Avis clients" */
 .avis-clients-section {
   background: transparent !important;
-  /* optionnel : ajuste l’espacement si besoin */
-  padding: 2rem 2rem 0; /* ou 0 si tu veux coller */
+  padding: 2rem 2rem 0;
 }
 
 /* ===== Patch EchoNote : retire le cercle vert + ajoute un background gradient sombre ===== */
@@ -1051,14 +1041,10 @@ html, body{
   background:
     radial-gradient(900px 500px at 85% -10%, rgba(0, 220, 160, .06), transparent 60%),
     linear-gradient(180deg, #081C34 0%, #0A2540 35%, #091E36 70%, #050F1F 100%) !important;
-  /* on conserve la couleur de texte définie plus haut */
 }
 
 /* ===== EchoNote — Full-page dark gradient + sections transparents ===== */
-
-/* 1) Dégradé sombre global sur toute la page */
 :root{
-  /* teintes cohérentes avec ta DA */
   --bg-a:#081C34;
   --bg-b:#0A2540;
   --bg-c:#091E36;
@@ -1069,26 +1055,164 @@ html, body{
 html, body{
   min-height: 100%;
   background:
-    /* halo teal très subtil en haut (optionnel) */
     radial-gradient(1100px 600px at 85% -10%, rgba(0,220,160,.06), transparent 60%),
-    /* dégradé sombre principal */
     linear-gradient(180deg, var(--bg-a) 0%, var(--bg-b) 35%, var(--bg-c) 70%, var(--bg-d) 100%);
-  background-attachment: fixed, fixed;   /* couvre toute la page même au scroll */
+  background-attachment: fixed, fixed;
   background-repeat: no-repeat, no-repeat;
   background-size: cover, cover;
 }
 
-/* 2) Laisse apparaître le fond global : on neutralise les backgrounds locaux */
 .hero-section,
 .features-section,
 .comparison-section,
 .avis-clients-section,
-.newsletter {           /* si tu veux aussi que la newsletter ne recolore pas */
+.newsletter {
   background: transparent !important;
-  box-shadow: none;     /* au besoin, retire l’ombre de section */
+  box-shadow: none;
+}
+.hero-section::before{ content: none !important; }
+
+/* ====================== */
+/*  PREMIUM WAITLIST UI   */
+/* ====================== */
+
+.cta-secondary{
+  margin-left:10px;
+  background:transparent;
+  border:1px solid rgba(100,255,218,.35);
+  color:#64ffda;
+  box-shadow:0 8px 24px rgba(17,224,185,.16);
+  border-radius:999px;
+  padding:.7rem 1.1rem;
+  display:inline-block;
+  text-decoration:none;
+  transition:transform .15s ease, box-shadow .2s ease;
+}
+.cta-secondary:hover{ transform:translateY(-1px); box-shadow:0 10px 30px rgba(17,224,185,.28); }
+
+/* Overlay + dialog */
+#wl-modal{
+  position:fixed; inset:0; display:grid; place-items:center; z-index:9999;
+  background:rgba(4,10,20,.62);
+  backdrop-filter:saturate(120%) blur(6px);
+  -webkit-backdrop-filter:saturate(120%) blur(6px);
+}
+#wl-modal[hidden]{ display:none !important; }
+
+.wl-dialog{
+  width:min(560px,94vw);
+  border-radius:20px;
+  padding:28px 24px;
+  position:relative;
+  background:linear-gradient(180deg, rgba(9,21,38,.94), rgba(9,21,38,.94));
+  box-shadow:0 24px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  overflow:hidden;
+  transform:translateY(8px) scale(.98);
+  opacity:0;
+  animation: wl-in .28s cubic-bezier(.2,.8,.2,1) forwards;
+}
+@keyframes wl-in{ to{ transform:translateY(0) scale(1); opacity:1; } }
+.wl-dialog:before{
+  content:""; position:absolute; inset:-35% -35% auto auto; width:70%; height:70%;
+  background:radial-gradient(closest-side, rgba(100,255,218,.18), transparent 70%);
+  filter:blur(18px); pointer-events:none;
+}
+.wl-dialog:after{
+  content:""; position:absolute; inset:0; border-radius:20px; padding:1px;
+  background:linear-gradient(135deg, rgba(100,255,218,.25), rgba(0,198,180,.08) 40%, rgba(255,255,255,.07) 60%, rgba(100,255,218,.12));
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
 }
 
-/* (rappel si tu ne l’as pas encore) : retirer le blob/cercle du hero */
-.hero-section::before{
-  content: none !important;
+/* Steps + progress */
+.wl-steps{ display:flex; gap:8px; align-items:center; margin-bottom:12px; }
+.wl-dot{ width:8px; height:8px; border-radius:999px; background:#284d4a; box-shadow:0 0 0 0 rgba(100,255,218,0); transition:all .25s ease; }
+.wl-dot.active{ background:#64ffda; box-shadow:0 0 12px 2px rgba(100,255,218,.28); }
+.wl-progress{ margin-left:auto; color:#a9c7d1; font-size:.95rem; }
+.wl-pbar{ height:6px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; margin:8px 0 12px; }
+.wl-pbar-fill{ height:100%; width:0%; background:linear-gradient(90deg,#12D9B2,#45F5DA); transition:width .25s ease; }
+
+/* Typo */
+.wl-title{ margin:0 0 6px; color:#e6f1ff; font-size:1.25rem; }
+.wl-muted{ margin:0 0 14px; color:#cfe5ff; opacity:.9; }
+.wl-small{ color:#a9c7d1; margin-top:6px; }
+
+/* Inputs */
+.wl-input, .wl-select{
+  width:100%; padding:.95rem 1rem; border-radius:12px;
+  border:1px solid rgba(255,255,255,.16); background:#0e1f31; color:#e8f3ff; outline:none;
+  transition:border-color .2s ease, box-shadow .2s ease, transform .06s ease;
 }
+.wl-select{ appearance:none; -webkit-appearance:none;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%23cfe5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
+  background-repeat:no-repeat; background-position:right 12px center; background-size:18px; padding-right:2.4rem;
+}
+.wl-input:focus, .wl-select:focus{ border-color:rgba(100,255,218,.55); box-shadow:0 0 0 4px rgba(100,255,218,.12); }
+
+/* Pills */
+.wl-radio-grid, .wl-check-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.wl-radio-grid label, .wl-check-grid label{
+  color:#d6e7ef; display:flex; gap:10px; align-items:center; padding:.7rem .75rem;
+  border:1px solid rgba(255,255,255,.10); border-radius:12px; background:#0f1e30; cursor:pointer;
+  transition:transform .08s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.wl-radio-grid label:hover, .wl-check-grid label:hover{ transform:translateY(-1px); }
+.wl-radio-grid input, .wl-check-grid input{ accent-color:#19e6c9; }
+
+/* highlight quand coché */
+.wl-radio-grid label:has(input:checked),
+.wl-check-grid label:has(input:checked){
+  border-color:rgba(100,255,218,.55);
+  box-shadow:0 10px 26px rgba(17,224,185,.22), inset 0 0 0 1px rgba(100,255,218,.25);
+  background:linear-gradient(180deg,#0f2236,#0f1e30);
+}
+
+/* Buttons */
+.wl-btn{ width:100%; border-radius:999px; padding:.95rem 1.1rem; font-weight:700; cursor:pointer; border:0; transition:transform .08s ease, box-shadow .2s ease, opacity .2s; }
+.wl-btn:active{ transform:translateY(1px) scale(.995); }
+.wl-btn[disabled]{ opacity:.6; cursor:not-allowed; box-shadow:none !important; }
+.wl-btn-primary{ background:linear-gradient(135deg,#12D9B2,#45F5DA); color:#05201a; box-shadow:0 10px 28px rgba(17,224,185,.32); position:relative; overflow:hidden; }
+.wl-btn-primary:hover{ box-shadow:0 14px 38px rgba(17,224,185,.42); }
+.wl-btn-primary::after{ content:""; position:absolute; inset:0; transform:translateX(-120%) skewX(-20deg); background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent); transition:transform .6s ease; }
+.wl-btn-primary:hover::after{ transform:translateX(120%) skewX(-20deg); }
+.wl-btn-ghost{ margin-top:8px; background:transparent; color:#cfe5ff; border:1px solid rgba(255,255,255,.22); }
+.wl-close{ position:absolute; top:10px; right:12px; font-size:20px; background:transparent; color:#cfe5ff; border:0; cursor:pointer; transition:transform .12s ease, opacity .12s ease; }
+.wl-close:hover{ transform:rotate(90deg); opacity:.85; }
+
+/* Success */
+#wl-success{ text-align:center; color:#e6f1ff; }
+.wl-check{ width:56px; height:56px; border-radius:999px; display:grid; place-items:center; margin:0 auto 10px; background:radial-gradient(closest-side, #64ffda, #11c9b9); box-shadow:0 16px 40px rgba(17,224,185,.35); }
+
+/* === Fix lisibilité & superposition du <select> ===================== */
+.wl-select{
+  color:#e6f1ff;
+  background:linear-gradient(180deg,#0F1E30,#0B1928);
+  border-color:rgba(255,255,255,.22);
+  font-size:1rem;
+  line-height:1.35;
+}
+.wl-select::-ms-expand{ display:none; } /* vieux IE */
+
+/* Palette de la liste déroulante (meilleur contraste sur Windows/Chrome) */
+.wl-select option{
+  background:#ffffff;      /* liste claire = lisibilité maximale */
+  color:#0b1f33;           /* texte foncé */
+  font-weight:600;
+}
+.wl-select option:checked{
+  background:#d7fff1;      /* sélection mint */
+  color:#063b2e;
+}
+.wl-select option[disabled]{
+  color:#94a3b8; background:#f1f5f9;
+}
+
+/* Pendant l'ouverture d'un select :
+   - on libère la place en retirant le sticky du CTA
+   - on permet au menu d'échapper à la zone scrollable */
+body.select-open #wl-form-quiz #wl-submit{ position:static; box-shadow:none; }
+body.select-open #wl-step2{ overflow:visible; }
+
+/* (bonus) réduit légèrement l’ombre du CTA pour éviter tout chevauchement visuel */
+#wl-form-quiz #wl-submit{ z-index:0; }
