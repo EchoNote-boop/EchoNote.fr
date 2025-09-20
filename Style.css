@@ -1216,3 +1216,14 @@ body.select-open #wl-step2{ overflow:visible; }
 
 /* (bonus) réduit légèrement l’ombre du CTA pour éviter tout chevauchement visuel */
 #wl-form-quiz #wl-submit{ z-index:0; }
+
+.site-footer{
+  margin-top:64px; padding:32px 16px;
+  background:#0a192f; color:#e6f1ff;
+}
+.site-footer a{
+  color:#64ffda; text-decoration:none;
+  border-bottom:1px dotted rgba(100,255,218,.4);
+}
+.site-footer a:hover{ border-bottom-color:transparent; filter:brightness(1.1); }
+.site-footer .container{ max-width:1100px; margin:0 auto; }
