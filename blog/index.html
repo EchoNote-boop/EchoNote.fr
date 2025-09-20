@@ -9,6 +9,125 @@
   <link rel="stylesheet" href="../assets/motion.css">
   <!-- metrics dans le head -->
   <script src="../metrics.js" defer></script>
+
+  <!-- ===== PREMIUM WAITLIST UI (même skin que la home) ===== -->
+  <style>
+    :root{
+      --wl-bg:#091526;
+      --wl-panel:#0e1f31;
+      --wl-text:#e6f1ff;
+      --wl-muted:#cfe5ff;
+      --wl-border:rgba(255,255,255,.10);
+      --wl-ring:rgba(100,255,218,.55);
+      --wl-grad-a:#12D9B2; --wl-grad-b:#45F5DA;
+      --wl-glow:#64ffda;
+    }
+
+    /* Overlay */
+    #wl-modal{
+      position:fixed; inset:0; display:grid; place-items:center; z-index:9999;
+      background:rgba(4,10,20,.62);
+      backdrop-filter:saturate(120%) blur(6px);
+      -webkit-backdrop-filter:saturate(120%) blur(6px);
+    }
+    #wl-modal[hidden]{ display:none !important; }
+
+    /* Dialog */
+    .wl-dialog{
+      width:min(560px,94vw);
+      max-height:min(90vh,760px);
+      overflow:auto;
+      border-radius:20px;
+      padding:28px 24px;
+      position:relative;
+      background:linear-gradient(180deg, rgba(9,21,38,.94), rgba(9,21,38,.94));
+      box-shadow:0 24px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      transform:translateY(8px) scale(.98);
+      opacity:0;
+      animation: wl-in .28s cubic-bezier(.2,.8,.2,1) forwards;
+      color:var(--wl-text);
+    }
+    @keyframes wl-in{ to{ transform:translateY(0) scale(1); opacity:1; } }
+    .wl-dialog:before{
+      content:""; position:absolute; inset:-35% -35% auto auto; width:70%; height:70%;
+      background:radial-gradient(closest-side, rgba(100,255,218,.18), transparent 70%);
+      filter:blur(18px); pointer-events:none;
+    }
+    .wl-dialog:after{
+      content:""; position:absolute; inset:0; border-radius:20px; padding:1px;
+      background:linear-gradient(135deg, rgba(100,255,218,.25), rgba(0,198,180,.08) 40%, rgba(255,255,255,.07) 60%, rgba(100,255,218,.12));
+      -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+    }
+
+    /* Steps + progress */
+    .wl-steps{ display:flex; gap:8px; align-items:center; margin-bottom:12px; }
+    .wl-dot{ width:8px; height:8px; border-radius:999px; background:#284d4a; box-shadow:0 0 0 0 rgba(100,255,218,0); transition:all .25s ease; }
+    .wl-dot.active{ background:var(--wl-glow); box-shadow:0 0 12px 2px rgba(100,255,218,.28); }
+    .wl-progress{ margin-left:auto; color:#a9c7d1; font-size:.95rem; }
+    .wl-pbar{ height:6px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; margin:8px 0 12px; }
+    .wl-pbar-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--wl-grad-a),var(--wl-grad-b)); transition:width .25s ease; }
+
+    /* Typo */
+    .wl-title{ margin:0 0 6px; color:var(--wl-text); font-size:1.25rem; }
+    .wl-muted{ margin:0 0 14px; color:var(--wl-muted); opacity:.9; }
+    .wl-small{ color:#a9c7d1; margin-top:6px; }
+
+    /* Inputs */
+    .wl-input, .wl-select{
+      width:100%; padding:.95rem 1rem; border-radius:12px;
+      border:1px solid var(--wl-border); background:var(--wl-panel); color:#e8f3ff; outline:none;
+      transition:border-color .2s ease, box-shadow .2s ease, transform .06s ease;
+    }
+    .wl-input:focus, .wl-select:focus{ border-color:var(--wl-ring); box-shadow:0 0 0 4px rgba(100,255,218,.12); }
+
+    /* Lisibilité Windows pour la liste déroulante */
+    .wl-select option{ background:#ffffff; color:#031d44; }
+
+    /* Pills (radios / checkboxes) */
+    .wl-radio-grid, .wl-check-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .wl-radio-grid label, .wl-check-grid label{
+      color:#d6e7ef; display:flex; gap:10px; align-items:center; padding:.7rem .75rem;
+      border:1px solid var(--wl-border); border-radius:12px; background:#0f1e30; cursor:pointer;
+      transition:transform .08s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .wl-radio-grid label:hover, .wl-check-grid label:hover{ transform:translateY(-1px); }
+    .wl-radio-grid input, .wl-check-grid input{ accent-color:#19e6c9; }
+    .wl-radio-grid label:has(input:checked),
+    .wl-check-grid label:has(input:checked){
+      border-color:var(--wl-ring);
+      box-shadow:0 10px 26px rgba(17,224,185,.22), inset 0 0 0 1px rgba(100,255,218,.25);
+      background:linear-gradient(180deg,#0f2236,#0f1e30);
+    }
+
+    /* Buttons */
+    .wl-btn{ width:100%; border-radius:999px; padding:.95rem 1.1rem; font-weight:700; cursor:pointer; border:0; transition:transform .08s ease, box-shadow .2s ease, opacity .2s; }
+    .wl-btn:active{ transform:translateY(1px) scale(.995); }
+    .wl-btn[disabled]{ opacity:.6; cursor:not-allowed; box-shadow:none !important; }
+    .wl-btn-primary{ background:linear-gradient(135deg,var(--wl-grad-a),var(--wl-grad-b)); color:#05201a; box-shadow:0 10px 28px rgba(17,224,185,.32); position:relative; overflow:hidden; }
+    .wl-btn-primary:hover{ box-shadow:0 14px 38px rgba(17,224,185,.42); }
+    .wl-btn-primary::after{ content:""; position:absolute; inset:0; transform:translateX(-120%) skewX(-20deg); background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent); transition:transform .6s ease; }
+    .wl-btn-primary:hover::after{ transform:translateX(120%) skewX(-20deg); }
+    .wl-btn-ghost{ margin-top:8px; background:transparent; color:var(--wl-muted); border:1px solid rgba(255,255,255,.22); }
+
+    /* Close */
+    .wl-close{ position:absolute; top:10px; right:12px; font-size:20px; background:transparent; color:#cfe5ff; border:0; cursor:pointer; transition:transform .12s ease, opacity .12s ease; }
+    .wl-close:hover{ transform:rotate(90deg); opacity:.85; }
+
+    /* Success */
+    #wl-success{ text-align:center; color:var(--wl-text); }
+    .wl-check{ width:56px; height:56px; border-radius:999px; display:grid; place-items:center; margin:0 auto 10px; background:radial-gradient(closest-side, var(--wl-glow), #11c9b9); box-shadow:0 16px 40px rgba(17,224,185,.35); }
+
+    /* Sécurité visuelle quand un <select> est ouvert (évite le chevauchement du CTA) */
+    body.select-open .wl-btn-primary{ margin-top:14px; }
+
+    /* Ajustement centrage si l’écran est bas */
+    @media (max-height:720px){
+      .wl-dialog{ align-self:start; margin-top:4vh; }
+    }
+  </style>
+  <!-- ===== /PREMIUM WAITLIST UI ===== -->
 </head>
 <body>
   <!-- === CMP minimal (production) === -->
@@ -42,7 +161,7 @@
 
 <header class="en-header" role="banner" aria-label="Navigation principale">
   <div class="en-header-inner">
-    <a class="en-logo-link" href="/Index.html" aria-label="EchoNote"
+    <a class="en-logo-link" href="/index.html" aria-label="EchoNote"
        data-event="nav_click" data-to="home" data-pos="header">
       <img class="en-logo" src="Logo EchoNote.png" alt="EchoNote" loading="eager" decoding="async" />
     </a>
@@ -52,14 +171,15 @@
         <li><a href="/index.html" data-event="nav_click" data-to="home" data-pos="header">Accueil</a></li>
         <li><a href="/index.html#features" data-event="nav_click" data-to="features" data-pos="header">Fonctionnalités</a></li>
         <li><a href="/index.html#pricing" data-event="nav_click" data-to="pricing" data-pos="header">Tarifs</a></li>
-        <li class="is-active"><a href="/blog/Index.html" aria-current="page" data-event="nav_click" data-to="blog" data-pos="header">Blog</a></li>
+        <li class="is-active"><a href="/blog/index.html" aria-current="page" data-event="nav_click" data-to="blog" data-pos="header">Blog</a></li>
         <li><a href="/index.html#contact" data-event="nav_click" data-to="contact" data-pos="header">Contact</a></li>
       </ul>
     </nav>
 
     <div class="en-ctas">
-      <a class="en-btn en-btn-ghost" href="/login" data-event="nav_click" data-to="login" data-pos="header">Connexion</a>
-      <a class="en-btn en-btn-accent" href="/signup" data-event="signup_click" data-location="header" data-cta="nav:subscribe">S’abonner</a>
+      <!-- Ouverture du questionnaire depuis ces deux CTA -->
+      <a class="en-btn en-btn-ghost" href="/PageEnCoursDeDev/pecdd.html" data-event="nav_click" data-to="login" data-pos="header" data-open-waitlist data-source="header">Connexion</a>
+      <a class="en-btn en-btn-accent" href="/PageEnCoursDeDev/pecdd.html" data-event="signup_click" data-location="header" data-cta="nav:subscribe" data-open-waitlist data-source="header">S’abonner</a>
     </div>
   </div>
 </header>
@@ -180,6 +300,246 @@
 
 <script src="../assets/EchoNote.js" defer></script>
 <script src="Blog.js" defer></script>
+
+<!-- === Waitlist Modal (même composant que la page d’accueil) === -->
+<div id="wl-modal" hidden>
+  <div class="wl-dialog" role="dialog" aria-modal="true" aria-labelledby="wl-title">
+    <button type="button" aria-label="Fermer" class="wl-close" id="wl-close">×</button>
+
+    <div class="wl-steps">
+      <span id="wl-step1-dot" class="wl-dot active"></span>
+      <span id="wl-step2-dot" class="wl-dot"></span>
+      <span class="wl-progress" id="wl-progress">Étape 1/2 — 10 s</span>
+    </div>
+
+    <!-- Étape 1 -->
+    <div id="wl-step1">
+      <h3 id="wl-title" class="wl-title">Rejoindre la liste d’attente</h3>
+      <p class="wl-muted">Sans CB — accès prioritaire à la bêta.</p>
+      <form id="wl-form-email" action="https://formspree.io/f/xandrbwa" method="POST" data-event="waitlist_email_submit" data-location="waitlist_modal">
+        <label for="wl-email" style="display:block; margin:0 0 6px; color:#cfe5ff;">Votre email professionnel</label>
+        <input id="wl-email" name="email" type="email" required autocomplete="email"
+               placeholder="ex. contact@votre-entreprise.fr" class="wl-input">
+        <button type="submit" class="wl-btn wl-btn-primary">Continuer</button>
+        <button type="button" class="wl-btn wl-btn-ghost" id="wl-later">Plus tard</button>
+      </form>
+    </div>
+
+    <!-- Étape 2 -->
+    <div id="wl-step2" hidden>
+      <h3 class="wl-title">Votre activité en 30 secondes</h3>
+      <p class="wl-muted">4 questions pour adapter EchoNote à vos besoins.</p>
+
+      <div class="wl-pbar" aria-hidden="true"><div class="wl-pbar-fill" id="wl-pbar-fill"></div></div>
+
+      <form id="wl-form-quiz" action="https://formspree.io/f/xandrbwa" method="POST"
+            data-event="waitlist_questionnaire_submit" data-location="waitlist_modal">
+        <label style="display:block; margin:10px 0 6px; color:#cfe5ff;">Votre entreprise est plutôt…</label>
+        <select name="sector" id="wl-sector" class="wl-select" required>
+          <option value="" disabled selected>Choisir</option>
+          <option>Bar / Restaurant / Café</option>
+          <option>Commerce de proximité</option>
+          <option>Santé / Bien-être</option>
+          <option>Services (immobilier, auto, artisan…)</option>
+          <option>Autre</option>
+        </select>
+
+        <label style="display:block; margin:10px 0 6px; color:#cfe5ff;">Combien d’avis Google environ ?</label>
+        <div class="wl-radio-grid" id="wl-reviews">
+          <label><input type="radio" name="reviews_band" value="<20" required> Moins de 20</label>
+          <label><input type="radio" name="reviews_band" value="20-50"> 20 à 50</label>
+          <label><input type="radio" name="reviews_band" value="50-200"> 50 à 200</label>
+          <label><input type="radio" name="reviews_band" value="200+"> Plus de 200</label>
+        </div>
+
+        <label style="display:block; margin:10px 0 6px; color:#cfe5ff;">Votre principale difficulté actuelle ?</label>
+        <select name="pain_point" id="wl-pain" class="wl-select" required>
+          <option value="" disabled selected>Choisir</option>
+          <option>Manque de temps pour répondre</option>
+          <option>Avis négatifs qui font fuir</option>
+          <option>Obtenir plus d’avis</option>
+          <option>Répondre efficacement / ton approprié</option>
+          <option>Suivi / reporting inexistant</option>
+        </select>
+
+        <label style="display:block; margin:10px 0 6px; color:#cfe5ff;">Vous seriez intéressé par… (1+)</label>
+        <div class="wl-check-grid" id="wl-interests" style="margin-bottom:6px;">
+          <label><input type="checkbox" name="interest_ai_reply" value="true"> Réponses auto intelligentes</label>
+          <label><input type="checkbox" name="interest_reports" value="true"> Rapports mensuels clairs</label>
+          <label><input type="checkbox" name="interest_alerts" value="true"> Alertes en temps réel</label>
+          <label><input type="checkbox" name="interest_competitive" value="true"> Analyse concurrentielle</label>
+        </div>
+
+        <input type="hidden" name="email" id="wl-email-hidden">
+        <button type="submit" class="wl-btn wl-btn-primary" id="wl-submit" disabled>Valider et rejoindre</button>
+      </form>
+      <p id="wl-small-note" class="wl-small" hidden>Envoi…</p>
+    </div>
+
+    <!-- Succès -->
+    <div id="wl-success" hidden>
+      <div class="wl-check">✓</div>
+      <h3 class="wl-title">Merci, votre demande est enregistrée ✅</h3>
+      <p class="wl-muted">Nous vous recontactons très vite pour l’accès à la bêta.</p>
+      <button type="button" class="wl-btn wl-btn-primary" id="wl-close-success">Retour au site</button>
+    </div>
+  </div>
+</div>
+<!-- === /Waitlist Modal === -->
+
+<script>
+/* -------------------------------------------
+   Ouverture du questionnaire depuis les CTA du header
+   + logique du modal (même que sur la home)
+-------------------------------------------- */
+(function(){
+  const modal = document.getElementById('wl-modal');
+  const step1 = document.getElementById('wl-step1');
+  const step2 = document.getElementById('wl-step2');
+  const step3 = document.getElementById('wl-success');
+  const emailInput = document.getElementById('wl-email');
+  const emailHidden = document.getElementById('wl-email-hidden');
+  const formEmail = document.getElementById('wl-form-email');
+  const formQuiz  = document.getElementById('wl-form-quiz');
+  const laterBtn  = document.getElementById('wl-later');
+  const closeBtn  = document.getElementById('wl-close');
+  const closeSuccessBtn = document.getElementById('wl-close-success');
+  const dot1 = document.getElementById('wl-step1-dot');
+  const dot2 = document.getElementById('wl-step2-dot');
+  const progress = document.getElementById('wl-progress');
+  const smallNote = document.getElementById('wl-small-note');
+  const pbar = document.getElementById('wl-pbar-fill');
+  const btnSubmit = document.getElementById('wl-submit');
+  const sector = document.getElementById('wl-sector');
+  const pain   = document.getElementById('wl-pain');
+  const reviews= formQuiz?.querySelectorAll('input[name="reviews_band"]');
+  const interests = formQuiz?.querySelectorAll('#wl-interests input[type="checkbox"]');
+
+  // tracking helper (compatible metrics.js + consent)
+  const ok = () => window.consent?.analytics !== false;
+  const track = (name, params={})=>{
+    params.page = location.pathname;
+    if (!ok()) { (window.__mtq = window.__mtq || []).push({name, params}); return; }
+    if (window.gtag) gtag('event', name, params);
+    else (window.__mtq = window.__mtq || []).push({name, params});
+  };
+
+  function closeModal(reason){
+    modal.hidden = true;
+    sessionStorage.setItem('wl_closed','true');
+    track('waitlist_close', { reason: reason || 'manual' });
+  }
+  function openModal(source){
+    if (sessionStorage.getItem('wl_closed') === 'true') return;
+    modal.hidden = false;
+    step1.hidden = false; step2.hidden = true; step3.hidden = true;
+    dot1.classList.add('active'); dot2.classList.remove('active');
+    progress.textContent = 'Étape 1/2 — 10 s';
+    emailInput?.focus();
+    track('waitlist_open', { location: source || 'blog_header' });
+  }
+  window.openWaitlistModal = openModal;
+
+  function goStep2(){
+    step1.hidden = true; step2.hidden = false; step3.hidden = true;
+    dot1.classList.remove('active'); dot2.classList.add('active');
+    progress.textContent = 'Étape 2/2 — 30 s';
+    track('waitlist_questionnaire_start', { location: 'waitlist_modal' });
+    updateProgress();
+  }
+  function goSuccess(){
+    step1.hidden = true; step2.hidden = true; step3.hidden = false;
+    dot1.classList.remove('active'); dot2.classList.remove('active');
+    progress.textContent = 'Merci !';
+    setTimeout(()=> closeModal('auto_success'), 1800);
+  }
+
+  // Brancher les boutons du header (connexion + s’abonner)
+  document.addEventListener('click', function(e){
+    const t = e.target.closest('[data-open-waitlist], [data-to="login"], [data-cta*="subscribe"]');
+    if(!t) return;
+    e.preventDefault();
+    openModal(t.getAttribute('data-source') || 'blog_header');
+  });
+
+  // Close handlers
+  closeBtn?.addEventListener('click', ()=> closeModal('close_button'));
+  closeSuccessBtn?.addEventListener('click', ()=> closeModal('success_button'));
+  modal?.addEventListener('click', (e)=>{ if (e.target === modal) closeModal('overlay'); });
+  document.addEventListener('keydown', (e)=>{ if (!modal.hidden && e.key === 'Escape') closeModal('escape'); });
+
+  // Step1 submit
+  formEmail?.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!emailInput.value) return;
+    localStorage.setItem('wl_email', emailInput.value);
+    emailHidden.value = emailInput.value;
+    track('waitlist_email_submit', { location: 'waitlist_modal' });
+    goStep2();
+  });
+
+  // "Plus tard"
+  laterBtn?.addEventListener('click', ()=>{
+    if (emailInput.value) {
+      localStorage.setItem('wl_email', emailInput.value);
+      emailHidden.value = emailInput.value;
+      track('waitlist_email_submit', { location: 'waitlist_modal', later: 'true' });
+    }
+    closeModal('later');
+  });
+
+  // Step2 submit (AJAX)
+  formQuiz?.addEventListener('submit', async function(e){
+    e.preventDefault();
+    smallNote.hidden = false; smallNote.textContent = 'Envoi…';
+    const fd = new FormData(formQuiz);
+    if (!fd.get('email')) fd.set('email', emailHidden.value || localStorage.getItem('wl_email') || '');
+    try{
+      const resp = await fetch(formQuiz.action, { method:'POST', body: fd, headers: { 'Accept':'application/json' } });
+      if (resp.ok){
+        localStorage.setItem('wl_done', 'true');
+        track('waitlist_questionnaire_submit', { location: 'waitlist_modal' });
+        goSuccess();
+      }else{
+        smallNote.textContent = 'Envoi via page externe…';
+        const w = window.open(formQuiz.action, '_blank', 'noopener');
+        if (w) { formQuiz.target = w.name; formQuiz.submit(); }
+        closeModal('fallback_formspree');
+      }
+    }catch(err){
+      smallNote.textContent = 'Envoi indisponible pour le moment. Réessayez plus tard.';
+      setTimeout(()=> closeModal('error'), 1200);
+    }
+  });
+
+  // Prefill email
+  const savedEmail = localStorage.getItem('wl_email');
+  if (savedEmail) { emailInput.value = savedEmail; emailHidden.value = savedEmail; }
+
+  // Progression + activation bouton
+  function answeredRequired(){
+    const sectorOK = sector && sector.value;
+    const painOK   = pain && pain.value;
+    let reviewsOK  = false;
+    reviews && reviews.forEach(r=>{ if(r.checked) reviewsOK = true; });
+    return (sectorOK ? 1:0) + (reviewsOK ? 1:0) + (painOK ? 1:0);
+  }
+  function anyInterest(){ let ok=false; interests && interests.forEach(c=>{ if(c.checked) ok=true; }); return ok; }
+  function updateProgress(){
+    const base = answeredRequired();
+    const extra = anyInterest() ? 1 : 0;
+    const pct = Math.min(100, Math.round(((base + (extra? .5:0)) / 3.5) * 100));
+    if (pbar) pbar.style.width = pct + '%';
+    if (btnSubmit) btnSubmit.disabled = base < 3;
+  }
+  ['change','input'].forEach(evt=> formQuiz?.addEventListener(evt, updateProgress, { passive:true }));
+
+  // Astuce: quand un <select> s'ouvre, on évite qu'il passe sous le CTA
+  step2?.addEventListener('focusin',  e=>{ if (e.target.matches('.wl-select')) document.body.classList.add('select-open'); });
+  step2?.addEventListener('change',   e=>{ if (e.target.matches('.wl-select')) setTimeout(()=>document.body.classList.remove('select-open'),0); });
+  step2?.addEventListener('blur',     e=>{ if (e.target.matches('.wl-select')) setTimeout(()=>document.body.classList.remove('select-open'),120); }, true);
+})();
+</script>
 
 <!-- (SUPPRIMÉ) GA4 hooks inline : metrics.js assure le tracking -->
 </body>
