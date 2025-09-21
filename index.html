@@ -3,8 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EchoNote - Maîtrisez votre e-réputation</title>
+
+  <!-- Titre (utilisé par Google pour l'intitulé bleu) -->
+  <title>EchoNote — Maîtrisez votre e-réputation</title>
+
+  <!-- Canonical (URL principale à indexer) -->
+  <link rel="canonical" href="https://echonote.eu/">
+
+  <!-- Favicon / Icônes (utilisées par Google et navigateurs)
+       -> j'utilise ton fichier PNG existant ; tu pourras le remplacer plus tard par des tailles dédiées si tu veux -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/Remod/Logo EchoNote remod.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/Remod/Logo EchoNote remod.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/Remod/Logo EchoNote remod.png">
+  <!-- (optionnel) <link rel="manifest" href="/site.webmanifest"> -->
+  <meta name="theme-color" content="#0a192f">
+
+  <!-- Open Graph (aperçus + aide au site name) -->
+  <meta property="og:site_name" content="EchoNote">
+  <meta property="og:title" content="EchoNote — Maîtrisez votre e-réputation">
+  <meta property="og:description" content="Maîtrisez votre e-réputation Google. Automatiquement. Filtrage intelligent, rapports IA, réponses automatiques.">
+  <meta property="og:url" content="https://echonote.eu/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://echonote.eu/Remod/Logo%20EchoNote%20remod.png">
+
+  <!-- Twitter Card (fallback réseaux) -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="EchoNote — Maîtrisez votre e-réputation">
+  <meta name="twitter:description" content="Maîtrisez votre e-réputation Google avec EchoNote. Rapide, simple, automatique.">
+  <meta name="twitter:image" content="https://echonote.eu/Remod/Logo%20EchoNote%20remod.png">
+
+  <!-- Données structurées : WebSite (site name “EchoNote”) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "EchoNote",
+    "alternateName": ["EchoNote SaaS", "EchoNote - e-réputation"],
+    "url": "https://echonote.eu/"
+  }
+  </script>
+
+  <!-- Données structurées : Organization (logo de marque) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "EchoNote",
+    "url": "https://echonote.eu/",
+    "logo": "https://echonote.eu/Remod/Logo%20EchoNote%20remod.png",
+    "sameAs": ["https://www.linkedin.com/company/echonote"]
+  }
+  </script>
+
   <link rel="stylesheet" href="Style.css">
+
   <!-- metrics doit être dans le head (defer) -->
   <script src="metrics.js" defer></script>
 
@@ -12,16 +64,16 @@
   <style>
     /* Empêche tout dépassement + scroll interne si contenu long */
     #wl-modal{
-      padding: clamp(12px, 4vh, 40px);                 /* marge autour du dialog */
-      place-items: start center;                        /* aligne en haut si grand */
-      overflow: auto;                                   /* overlay scrollable */
+      padding: clamp(12px, 4vh, 40px);
+      place-items: start center;
+      overflow: auto;
     }
     .wl-dialog{
-      width: clamp(320px, 92vw, 640px);                 /* un poil plus large mais fluide */
-      max-height: min(86dvh, 760px);                    /* ne dépasse jamais l’écran */
+      width: clamp(320px, 92vw, 640px);
+      max-height: min(86dvh, 760px);
       display: flex;
       flex-direction: column;
-      overflow: hidden;                                 /* on délègue le scroll à l’étape */
+      overflow: hidden;
       border-radius: 20px;
       background: radial-gradient(120% 120% at 85% -10%, rgba(100,255,218,.10), transparent 60%),
                   linear-gradient(180deg, rgba(9,21,38,.96), rgba(9,21,38,.92));
@@ -30,16 +82,13 @@
       backdrop-filter: saturate(120%) blur(10px);
       -webkit-backdrop-filter: saturate(120%) blur(10px);
     }
-
-    /* Le contenu des étapes scrolle à l’intérieur si nécessaire */
     #wl-step1, #wl-step2, #wl-success{
       overflow: auto;
       overscroll-behavior: contain;
       max-height: 100%;
-      padding-right: 4px;                               /* place pour la scrollbar */
-      scrollbar-width: thin;                            /* Firefox */
+      padding-right: 4px;
+      scrollbar-width: thin;
     }
-    /* WebKit scrollbar minimaliste */
     #wl-step1::-webkit-scrollbar, #wl-step2::-webkit-scrollbar, #wl-success::-webkit-scrollbar{ width: 8px; }
     #wl-step1::-webkit-scrollbar-thumb, #wl-step2::-webkit-scrollbar-thumb, #wl-success::-webkit-scrollbar-thumb{
       background: linear-gradient(180deg, rgba(100,255,218,.45), rgba(17,224,185,.25));
@@ -49,8 +98,6 @@
       background: rgba(255,255,255,.06);
       border-radius: 999px;
     }
-
-    /* CTA toujours accessible : colle le bouton au bas de l’étape quand ça scrolle */
     #wl-form-email .wl-btn-primary,
     #wl-form-quiz  #wl-submit,
     #wl-success    .wl-btn-primary{
@@ -59,8 +106,6 @@
       margin-top: 12px;
       box-shadow: 0 10px 28px rgba(17,224,185,.32);
     }
-
-    /* Micro-polish visuel des champs pour renforcer le côté premium */
     .wl-input, .wl-select{
       background: linear-gradient(180deg, #0F1E30, #0B1928);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
@@ -72,21 +117,11 @@
     .wl-radio-grid label, .wl-check-grid label{
       background: linear-gradient(180deg, #10243a, #0e1f31);
     }
-
-    /* Empêche le scroll de fond quand le modal est ouvert */
     body.wl-open{ overflow: hidden; }
-
-    /* Petites tailles : resserrer la grille des choix pour que rien ne déborde */
     @media (max-width: 520px){
       .wl-radio-grid, .wl-check-grid{ grid-template-columns: 1fr; }
     }
   </style>
-  <!-- Favicon en PNG -->
-<link rel="icon" type="image/png" sizes="32x32" href="/Remod/Logo EchoNote remod.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/Remod/Logo EchoNote remod.png">
-
-<!-- (Optionnel) Icône iOS / mobile -->
-<link rel="apple-touch-icon" sizes="180x180" href="/Remod/Logo EchoNote remod.png">
 </head>
 <body>
 
@@ -459,18 +494,17 @@
       <p class="copyright">© 2025 EchoNote</p>
     </div>
     <footer class="site-footer">
-  <div class="container">
-    <p>Contactez-nous :
-      <a id="footer-email"
-         href="mailto:contact@echonote.eu"
-         data-event="footer_email_click"
-         rel="noopener">
-        martin.mares@echonote.eu
-      </a>
-    </p>
-  </div>
-</footer>
-
+      <div class="container">
+        <p>Contactez-nous :
+          <a id="footer-email"
+             href="mailto:contact@echonote.eu"
+             data-event="footer_email_click"
+             rel="noopener">
+            martin.mares@echonote.eu
+          </a>
+        </p>
+      </div>
+    </footer>
   </footer>
 
   <script src="/assets/EchoNote.js" defer></script>
@@ -607,28 +641,14 @@
     const emailHidden = document.getElementById('wl-email-hidden');
     const formEmail = document.getElementById('wl-form-email');
     const formQuiz  = document.getElementById('wl-form-quiz');
-    /* === Ouverture/fermeture "intelligente" du <select> pour ne pas
-       qu'il se fasse recouvrir par le bouton sticky =================== */
-const step2El = document.getElementById('wl-step2');
-function setSelectOpen(on){ document.body.classList.toggle('select-open', !!on); }
 
-step2El?.addEventListener('mousedown', e=>{
-  if (e.target.closest('.wl-select')) setSelectOpen(true);
-});
-step2El?.addEventListener('focusin', e=>{
-  if (e.target.matches('.wl-select')) setSelectOpen(true);
-});
-step2El?.addEventListener('change', e=>{
-  if (e.target.matches('.wl-select')) setTimeout(()=>setSelectOpen(false),0);
-});
-/* on capture le blur pour être sûr de récupérer le focus qui part */
-step2El?.addEventListener('blur', e=>{
-  if (e.target.matches('.wl-select')) setTimeout(()=>setSelectOpen(false),120);
-}, true);
-/* clic n'importe où hors select => on referme le mode "select ouvert" */
-document.addEventListener('click', e=>{
-  if (!e.target.closest('.wl-select')) setSelectOpen(false);
-});
+    const step2El = document.getElementById('wl-step2');
+    function setSelectOpen(on){ document.body.classList.toggle('select-open', !!on); }
+    step2El?.addEventListener('mousedown', e=>{ if (e.target.closest('.wl-select')) setSelectOpen(true); });
+    step2El?.addEventListener('focusin', e=>{ if (e.target.matches('.wl-select')) setSelectOpen(true); });
+    step2El?.addEventListener('change', e=>{ if (e.target.matches('.wl-select')) setTimeout(()=>setSelectOpen(false),0); });
+    step2El?.addEventListener('blur', e=>{ if (e.target.matches('.wl-select')) setTimeout(()=>setSelectOpen(false),120); }, true);
+    document.addEventListener('click', e=>{ if (!e.target.closest('.wl-select')) setSelectOpen(false); });
 
     const laterBtn  = document.getElementById('wl-later');
     const closeBtn  = document.getElementById('wl-close');
@@ -638,7 +658,6 @@ document.addEventListener('click', e=>{
     const progress = document.getElementById('wl-progress');
     const smallNote = document.getElementById('wl-small-note');
 
-    // tracking helper (compatible metrics.js + consent)
     const ok = () => window.consent?.analytics !== false;
     const track = (name, params={})=>{
       params.page = location.pathname;
@@ -652,23 +671,21 @@ document.addEventListener('click', e=>{
 
     function closeModal(reason){
       modal.hidden = true;
-      document.body.classList.remove('wl-open');  // <- déverrouille le scroll de fond
+      document.body.classList.remove('wl-open');
       sessionStorage.setItem('wl_closed','true');
       slideInShown = true; exited = true;
       track('waitlist_close', { reason: reason || 'manual' });
     }
-
     function openModal(source){
       if (sessionStorage.getItem('wl_closed') === 'true') return;
       modal.hidden = false;
-      document.body.classList.add('wl-open');     // <- verrouille le scroll de fond
+      document.body.classList.add('wl-open');
       step1.hidden = false; step2.hidden = true; step3.hidden = true;
       dot1.classList.add('active'); dot2.classList.remove('active');
       progress.textContent = 'Étape 1/2 — 10 s';
       emailInput.focus();
       track('waitlist_open', { location: source });
     }
-
     function goStep2(){
       step1.hidden = true; step2.hidden = false; step3.hidden = true;
       dot1.classList.remove('active'); dot2.classList.add('active');
@@ -676,7 +693,6 @@ document.addEventListener('click', e=>{
       track('waitlist_questionnaire_start', { location: 'waitlist_modal' });
       if (typeof updateProgress === 'function') updateProgress();
     }
-
     function goSuccess(){
       step1.hidden = true; step2.hidden = true; step3.hidden = false;
       dot1.classList.remove('active'); dot2.classList.remove('active');
@@ -684,22 +700,18 @@ document.addEventListener('click', e=>{
       setTimeout(()=> closeModal('auto_success'), 1800);
     }
 
-    // Openers
     document.getElementById('open-waitlist-hero')?.addEventListener('click', (e)=>{ e.preventDefault(); openModal('hero'); });
     document.getElementById('open-waitlist-prepricing')?.addEventListener('click', (e)=>{ e.preventDefault(); openModal('pre_pricing'); });
 
-    // Header buttons -> même questionnaire
     document.querySelector('.actions .btn.btn-outline')?.addEventListener('click', (e)=>{ e.preventDefault(); openModal('header_login'); });
     document.querySelector('.actions .btn.btn-primary')?.addEventListener('click', (e)=>{ e.preventDefault(); openModal('header_subscribe'); });
     document.querySelector('.cta-button[href*="pecdd.html"]')?.addEventListener('click', (e)=>{ e.preventDefault(); openModal('hero_try'); });
 
-    // Close handlers
     closeBtn?.addEventListener('click', ()=> closeModal('close_button'));
     closeSuccessBtn?.addEventListener('click', ()=> closeModal('success_button'));
     modal?.addEventListener('click', (e)=>{ if (e.target === modal) closeModal('overlay'); });
     document.addEventListener('keydown', (e)=>{ if (!modal.hidden && e.key === 'Escape') closeModal('escape'); });
 
-    // Step1 submit
     formEmail?.addEventListener('submit', function(e){
       e.preventDefault();
       if (!emailInput.value) return;
@@ -708,8 +720,6 @@ document.addEventListener('click', e=>{
       track('waitlist_email_submit', { location: 'waitlist_modal' });
       goStep2();
     });
-
-    // "Plus tard"
     laterBtn?.addEventListener('click', ()=>{
       if (emailInput.value) {
         localStorage.setItem('wl_email', emailInput.value);
@@ -719,18 +729,13 @@ document.addEventListener('click', e=>{
       closeModal('later');
     });
 
-    // Step2 submit (AJAX)
     formQuiz?.addEventListener('submit', async function(e){
       e.preventDefault();
       smallNote.hidden = false; smallNote.textContent = 'Envoi…';
       const fd = new FormData(formQuiz);
       if (!fd.get('email')) fd.set('email', emailHidden.value || localStorage.getItem('wl_email') || '');
       try{
-        const resp = await fetch(formQuiz.action, {
-          method:'POST',
-          body: fd,
-          headers: { 'Accept':'application/json' }
-        });
+        const resp = await fetch(formQuiz.action, { method:'POST', body: fd, headers: { 'Accept':'application/json' } });
         if (resp.ok){
           localStorage.setItem('wl_done', 'true');
           track('waitlist_questionnaire_submit', { location: 'waitlist_modal' });
@@ -747,11 +752,9 @@ document.addEventListener('click', e=>{
       }
     });
 
-    // Prefill email
     const savedEmail = localStorage.getItem('wl_email');
     if (savedEmail) { emailInput.value = savedEmail; emailHidden.value = savedEmail; }
 
-    // Slide-in (55%)
     function trySlideIn(){
       if (slideInShown) return;
       if (sessionStorage.getItem('wl_closed') === 'true') return;
@@ -765,7 +768,6 @@ document.addEventListener('click', e=>{
     }
     window.addEventListener('scroll', trySlideIn, { passive:true });
 
-    // Exit intent
     document.addEventListener('mouseleave', (e)=>{
       if (exited || window.innerWidth < 900) return;
       if (!e.clientY || e.clientY > 0) return;
@@ -783,7 +785,6 @@ document.addEventListener('click', e=>{
       }
     });
 
-    /* === Progression + activation bouton === */
     const pbar = document.getElementById('wl-pbar-fill');
     const btnSubmit = document.getElementById('wl-submit');
     const sector = document.getElementById('wl-sector');
@@ -802,8 +803,8 @@ document.addEventListener('click', e=>{
       let ok=false; interests && interests.forEach(c=>{ if(c.checked) ok=true; }); return ok;
     }
     window.updateProgress = function(){
-      const base = answeredRequired();          // requis: 3
-      const extra = anyInterest() ? 1 : 0;      // bonus 0/1
+      const base = answeredRequired();
+      const extra = anyInterest() ? 1 : 0;
       const pct = Math.min(100, Math.round(((base + (extra? .5:0)) / 3.5) * 100));
       if (pbar) pbar.style.width = pct + '%';
       if (btnSubmit) btnSubmit.disabled = base < 3;
