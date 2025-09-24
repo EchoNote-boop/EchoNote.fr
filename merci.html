@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Merci ! — EchoNote</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- On évite d’indexer la page merci -->
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/Remod/logo-echocote-remod-copie.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/Remod/logo-echocote-remod-copie.png">
+  <link rel="stylesheet" href="/Style.css">
+
+  <!-- (Optionnel) ton script analytics interne si tu veux garder la logique de consent -->
+  <script src="/metrics.js" defer></script>
+
+  <!-- === GA4 : remplace G-XXXXXXXXXX par ton ID de mesure === -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9G7WGJHBHB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-9G7WGJHBHB'); // TODO: remplace par ton ID GA4
+
+    // Événement analytics (facultatif mais utile) : lead généré
+    // On évite de le déclencher plusieurs fois si l'utilisateur recharge.
+    (function(){
+      const key = 'ga4_generate_lead_fired';
+      if (!sessionStorage.getItem(key)) {
+        gtag('event', 'generate_lead', { page_location: location.href, page_title: document.title });
+        sessionStorage.setItem(key, '1');
+      }
+    })();
+  </script>
+
+  <style>
+    /* Un peu de style léger si la CSS globale n'est pas chargée assez tôt */
+    .wrap {
+      min-height: 70vh;
+      display: grid;
+      place-items: center;
+      padding: clamp(16px, 4vw, 48px);
+    }
+    .card {
+      max-width: 740px;
+      width: 100%;
+      border-radius: 18px;
+      padding: clamp(20px, 4vw, 36px);
+      background: linear-gradient(135deg, rgba(10,25,47,.9), rgba(16,55,72,.9));
+      color: #e6f1ff;
+      border: 1px solid rgba(100,255,218,.18);
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      text-align: center;
+    }
+    .card h1 { margin: 0 0 8px; font-size: clamp(24px, 4vw, 34px); }
+    .card p  { margin: 0 0 18px; opacity: .9; }
+    .btn-primary {
+      display: inline-block;
+      padding: .8rem 1.2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      background: linear-gradient(135deg,#12D9B2,#45F5DA);
+      color: #05201a;
+      box-shadow: 0 10px 28px rgba(17,224,185,.32);
+    }
+    .muted { margin-top: 16px; font-size: 14px; opacity: .75; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <h1>Merci ✅</h1>
+      <p>Votre demande a bien été envoyée. Nous vous recontactons très vite pour l’accès à la bêta.</p>
+      <a class="btn-primary" href="/">Retour à l’accueil</a>
+      <p class="muted">Si cette page s’affiche après une inscription, vous pouvez la fermer en toute sécurité.</p>
+    </section>
+  </main>
+</body>
+</html>

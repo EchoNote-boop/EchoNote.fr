@@ -10,15 +10,13 @@
   <!-- Canonical (URL principale à indexer) -->
   <link rel="canonical" href="https://echonote.eu/">
 
-  <!-- Favicon / Icônes (utilisées par Google et navigateurs)
-       -> j'utilise ton fichier PNG existant ; tu pourras le remplacer plus tard par des tailles dédiées si tu veux -->
+  <!-- Favicon / Icônes -->
   <link rel="icon" type="image/png" sizes="32x32" href="/Remod/logo-echocote-remod-copie.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/Remod/logo-echocote-remod-copie.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/Remod/logo-echocote-remod-copie.png">
-  <!-- (optionnel) <link rel="manifest" href="/site.webmanifest"> -->
   <meta name="theme-color" content="#0a192f">
 
-  <!-- Open Graph (aperçus + aide au site name) -->
+  <!-- Open Graph -->
   <meta property="og:site_name" content="EchoNote">
   <meta property="og:title" content="EchoNote — Maîtrisez votre e-réputation">
   <meta property="og:description" content="Maîtrisez votre e-réputation Google. Automatiquement. Filtrage intelligent, rapports IA, réponses automatiques.">
@@ -26,13 +24,13 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://echonote.eu/Remod/Logo%20EchoNote%20remod.png">
 
-  <!-- Twitter Card (fallback réseaux) -->
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="EchoNote — Maîtrisez votre e-réputation">
   <meta name="twitter:description" content="Maîtrisez votre e-réputation Google avec EchoNote. Rapide, simple, automatique.">
   <meta name="twitter:image" content="https://echonote.eu/Remod/Logo%20EchoNote%20remod.png">
 
-  <!-- Données structurées : WebSite (site name “EchoNote”) -->
+  <!-- Données structurées : WebSite -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -43,7 +41,7 @@
   }
   </script>
 
-  <!-- Données structurées : Organization (logo de marque) -->
+  <!-- Données structurées : Organization -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -540,7 +538,7 @@
     hero.addEventListener('mouseleave', () => { heroImg.style.transform = 'translate(0,0)'; });
   </script>
 
-  <!-- === Waitlist Modal (Email -> Questionnaire -> Succès) === -->
+  <!-- === Waitlist Modal (Email -> Questionnaire -> Succès/REDIRECT) === -->
   <div id="wl-modal" hidden>
     <div class="wl-dialog" role="dialog" aria-modal="true" aria-labelledby="wl-title">
       <button type="button" aria-label="Fermer" class="wl-close" id="wl-close">×</button>
@@ -570,7 +568,6 @@
         <h3 class="wl-title">Votre activité en 30 secondes</h3>
         <p class="wl-muted">4 questions pour adapter EchoNote à vos besoins.</p>
 
-        <!-- Barre de progression -->
         <div class="wl-pbar" aria-hidden="true"><div class="wl-pbar-fill" id="wl-pbar-fill"></div></div>
 
         <form id="wl-form-quiz" action="https://formspree.io/f/xandrbwa" method="POST"
@@ -617,7 +614,7 @@
         <p id="wl-small-note" class="wl-small" hidden>Envoi…</p>
       </div>
 
-      <!-- Step 3: Succès -->
+      <!-- Step 3: Succès (resté pour compat, mais on redirige) -->
       <div id="wl-success" hidden>
         <div class="wl-check">✓</div>
         <h3 class="wl-title">Merci, votre demande est enregistrée ✅</h3>
@@ -631,6 +628,7 @@
   <script>
   /* -------------------------------------------
      Waitlist modal logic + GA4 hooks + slide-in + AJAX submit + close handling + progression
+     + REDIRECT /merci sur succès + fallback Formspree avec redirection
   -------------------------------------------- */
   (function(){
     const modal = document.getElementById('wl-modal');
@@ -737,11 +735,24 @@
       try{
         const resp = await fetch(formQuiz.action, { method:'POST', body: fd, headers: { 'Accept':'application/json' } });
         if (resp.ok){
+          // ✅ Succès AJAX -> redirection vers la page de remerciement
           localStorage.setItem('wl_done', 'true');
           track('waitlist_questionnaire_submit', { location: 'waitlist_modal' });
-          goSuccess();
+          window.location.href = '/merci.html';
+          return;
         }else{
+          // ✅ Fallback Formspree -> forcer redirection serveur vers /merci
           smallNote.textContent = 'Envoi via page externe…';
+          // Ajoute les champs de redirection (plusieurs variantes pour compat)
+          const makeHidden = (name, value) => {
+            let el = formQuiz.querySelector(`input[name="${name}"]`);
+            if(!el){ el = document.createElement('input'); el.type='hidden'; el.name=name; formQuiz.appendChild(el); }
+            el.value = value;
+          };
+          const thankyou = (location.origin || (window.location.protocol + '//' + window.location.host)) + '/merci.html';
+          makeHidden('redirect', thankyou);   // Formspree (variante)
+          makeHidden('_redirect', thankyou);  // Autre variante
+
           const w = window.open(formQuiz.action, '_blank', 'noopener');
           if (w) { formQuiz.target = w.name; formQuiz.submit(); }
           closeModal('fallback_formspree');
