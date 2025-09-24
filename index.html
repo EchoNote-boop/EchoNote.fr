@@ -695,8 +695,10 @@
       step1.hidden = true; step2.hidden = true; step3.hidden = false;
       dot1.classList.remove('active'); dot2.classList.remove('active');
       progress.textContent = 'Merci !';
-      setTimeout(()=> closeModal('auto_success'), 1800);
-    }
+      setTimeout(()=> {
+    window.location.href = '/merci.html?src=waitlist';
+  }, 400);
+}
 
     document.getElementById('open-waitlist-hero')?.addEventListener('click', (e)=>{ e.preventDefault(); openModal('hero'); });
     document.getElementById('open-waitlist-prepricing')?.addEventListener('click', (e)=>{ e.preventDefault(); openModal('pre_pricing'); });
